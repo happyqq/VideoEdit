@@ -1,0 +1,572 @@
+:root {
+  --primary-color: #3b82f6;
+  --dark-bg: #121826;
+  --darker-bg: #0c111b;
+  --light-bg: #1e293b;
+  --text-color: #f8fafc;
+  --border-color: #334155;
+  --accent-color: #f43f5e;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: var(--darker-bg);
+  color: var(--text-color);
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  visibility: visible !important;
+  opacity: 1 !important;
+  background-color: var(--darker-bg);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: var(--dark-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.logo span {
+  margin-left: 10px;
+}
+
+.header-buttons button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.main-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-width: 0; /* 防止子元素撑开父容器 */
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.sidebar {
+  width: 200px;
+  min-width: 200px; /* 防止sidebar被压缩 */
+  background-color: var(--dark-bg);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  flex-shrink: 0; /* 防止sidebar被压缩 */
+}
+
+.sidebar-section {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-section h3 {
+  margin-bottom: 10px;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.shapes-grid, .colors-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.shape-item, .color-item {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--light-bg);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.shape-item:hover, .color-item:hover {
+  background-color: var(--border-color);
+}
+
+.shape-item i {
+  font-size: 18px;
+}
+
+.color-item {
+  border: 1px solid var(--border-color);
+}
+
+.animation-buttons, .progress-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.animation-buttons button, .progress-buttons button {
+  background-color: var(--light-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.animation-buttons button:hover, .progress-buttons button:hover {
+  background-color: var(--border-color);
+}
+
+.preview-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--darker-bg);
+  max-height: calc(100vh - 250px); /* 限制预览容器的最大高度，确保底部时间轴可见 */
+  min-height: 300px; /* 设置最小高度 */
+}
+
+.video-preview {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden; /* 防止视频溢出 */
+  max-height: calc(100vh - 300px); /* 限制视频预览区的最大高度 */
+}
+
+.video-element {
+  max-width: 100%;
+  max-height: 100%;
+  background-color: black;
+  object-fit: contain; /* 保持视频比例，确保完整显示 */
+}
+
+/* 添加选中元素的样式 */
+.editor-element.selected {
+  outline: 2px solid var(--primary-color);
+  z-index: 100;
+}
+
+/* 调整控制点样式 */
+.resize-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: var(--primary-color);
+  border: 1px solid white;
+  border-radius: 50%;
+}
+
+.handle-nw { top: -5px; left: -5px; cursor: nwse-resize; }
+.handle-ne { top: -5px; right: -5px; cursor: nesw-resize; }
+.handle-sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+.handle-se { bottom: -5px; right: -5px; cursor: nwse-resize; }
+
+/* 改进文本编辑器容器样式 */
+.text-editor-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* 改进文本编辑器样式 */
+.text-editor {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  border: none;
+  outline: none;
+  text-align: center;
+}
+
+/* 确保基本可见性 */
+body {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#app {
+  visibility: visible !important;
+  opacity: 1 !important;
+  background-color: var(--darker-bg);
+}
+
+/* 确保主容器可见 */
+.main-container {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.editor-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.editor-element {
+  position: absolute;
+  pointer-events: auto;
+  cursor: move;
+}
+
+.text-element {
+  min-width: 100px;
+  min-height: 30px;
+  padding: 5px;
+  border: 1px dashed rgba(255, 255, 255, 0.5);
+}
+
+.shape-element {
+  min-width: 50px;
+  min-height: 50px;
+}
+
+.controls {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--dark-bg);
+  border-top: 1px solid var(--border-color);
+}
+
+.timeline-container {
+  height: 150px;
+  background-color: var(--dark-bg);
+  border-top: 1px solid var(--border-color);
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 150px; /* 确保时间轴有最小高度 */
+  flex-shrink: 0; /* 防止时间轴被压缩 */
+}
+
+.timeline-ruler {
+  height: 20px;
+  display: flex;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--light-bg);
+}
+
+.time-marker {
+  position: absolute;
+  height: 100%;
+  width: 2px;
+  background-color: red;
+  top: 0;
+  z-index: 10;
+  animation: none; /* 确保没有动画 */
+}
+
+.time-tick {
+  position: relative;
+  width: 60px;
+  border-left: 1px solid var(--border-color);
+  font-size: 10px;
+  padding: 2px 4px;
+}
+
+.tracks-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.track {
+  height: 40px;
+  background-color: var(--dark-bg);
+  border-bottom: 1px solid var(--border-color);
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* 添加轨道标签样式 */
+.track-label {
+  width: 100px;
+  min-width: 100px;
+  padding: 0 10px;
+  font-size: 12px;
+  color: var(--text-color);
+  border-right: 1px solid var(--border-color);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  background-color: var(--light-bg);
+  opacity: 0.8;
+}
+
+.track-item {
+  position: absolute;
+  height: 80%;
+  border-radius: 4px;
+  padding: 4px;
+  color: white;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 添加阴影使图层更明显 */
+  transition: all 0.2s;
+}
+
+.track-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.shape-track-item {
+  background-color: #ec4899;
+}
+
+.text-track-item {
+  background-color: #3b82f6;
+}
+
+.audio-track-item {
+  background-color: #f97316;
+}
+
+.subtitle-track-item {
+  background-color: #eab308;
+}
+
+.progress-track-item {
+  background-color: #8b5cf6;
+}
+
+.file-input {
+  display: none;
+}
+
+button {
+  margin: 0 5px;
+}
+
+.play-pause-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.time-display {
+  min-width: 80px;
+  margin: 0 15px;
+  font-family: monospace;
+  font-size: 14px;
+}
+
+/* 添加动画关键帧 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 导出对话框样式 */
+.export-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.export-modal-content {
+  background-color: var(--dark-bg);
+  border-radius: 8px;
+  width: 400px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.export-modal-content h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.export-options {
+  margin-bottom: 20px;
+}
+
+.export-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.export-option select {
+  width: 60%;
+  padding: 8px;
+  background-color: var(--light-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.export-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.export-buttons button {
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.export-buttons button:first-child {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+}
+
+.export-buttons button:first-child:disabled {
+  background-color: var(--border-color);
+  cursor: not-allowed;
+}
+
+.export-buttons button:last-child {
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+}
+
+.export-progress {
+  margin-top: 20px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: var(--light-bg);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.3s;
+}
+
+.progress-text {
+  text-align: center;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+/* 导出对话框样式补充 */
+.export-modal-content {
+  animation: fadeIn 0.3s;
+}
+
+/* 移除不必要的动画，避免性能问题 */
+.time-marker {
+  position: absolute;
+  height: 100%;
+  width: 2px;
+  background-color: red;
+  top: 0;
+  z-index: 10;
+  animation: none; /* 确保没有动画 */
+}
+
+/* 强化显示视频序列中的单独图层 */
+.track-item {
+  position: absolute;
+  height: 80%;
+  border-radius: 4px;
+  padding: 4px;
+  color: white;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* 添加阴影使图层更明显 */
+  transition: all 0.2s;
+}
+
+.track-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* 添加媒体查询，在不同屏幕大小下调整布局 */
+@media (max-height: 768px) {
+  .preview-container {
+    max-height: calc(100vh - 200px);
+    min-height: 250px;
+  }
+  
+  .timeline-container {
+    height: 120px;
+    min-height: 120px;
+  }
+}
